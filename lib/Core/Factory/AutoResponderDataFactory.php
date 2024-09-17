@@ -70,7 +70,9 @@ class AutoResponderDataFactory implements EmailContentFactoryInterface
             $this->resolveRecipient($data),
             [$this->resolve($data, Constants::FIELD_SENDER, Constants::FIELD_TYPE_EMAIL)],
             $this->resolveSubject($data),
-            $body
+            $body,
+            $this->resolveRecipient( $data, Constants::FIELD_CC ),
+            $this->resolveRecipient( $data, Constants::FIELD_BCC )
         );
     }
 
@@ -115,12 +117,12 @@ class AutoResponderDataFactory implements EmailContentFactoryInterface
     /**
      * Returns resolved parameter.
      */
-    protected function resolveRecipient(TemplateContent $data): array
+    protected function resolveRecipient(TemplateContent $data, string $field = Constants::FIELD_RECIPIENT): array
     {
         $fields = $data->getEvent()->getInformationCollectionStruct()->getCollectedFields();
-        if ($data->getTemplateWrapper()->hasBlock(Constants::FIELD_RECIPIENT)) {
+        if ($data->getTemplateWrapper()->hasBlock($field)) {
             $rendered = $data->getTemplateWrapper()->renderBlock(
-                Constants::FIELD_RECIPIENT,
+                $field,
                 [
                     'event' => $data->getEvent(),
                     'collected_fields' => $fields,

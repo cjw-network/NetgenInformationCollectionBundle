@@ -31,4 +31,6 @@ class ConfigurationConstants
     public const EMAIL_SENDER = 'sender';
     public const EMAIL_RECIPIENT = 'recipient';
     public const EMAIL_SUBJECT = 'subject';
+    public const EMAIL_CC = 'cc';
+    public const EMAIL_BCC = 'bcc';
 }

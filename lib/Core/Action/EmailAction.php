@@ -56,6 +56,22 @@ final class EmailAction implements ActionInterface
             $email->addTo(Address::create($recipient));
         }
 
+        if ( $emailContent->hasCc() )
+        {
+            foreach ( $emailContent->getCc() as $cc )
+            {
+                $email->addCc( Address::create( $cc ) );
+            }
+        }
+
+        if ( $emailContent->hasBcc() )
+        {
+            foreach ( $emailContent->getBcc() as $bcc )
+            {
+                $email->addCc( Address::create( $bcc ) );
+            }
+        }
+
         $email->subject($emailContent->getSubject());
         $email->html($emailContent->getBody());
 

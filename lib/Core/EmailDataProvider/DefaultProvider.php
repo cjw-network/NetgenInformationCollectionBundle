@@ -58,7 +58,9 @@ class DefaultProvider implements EmailDataProviderInterface
             $this->resolveEmail($data, Constants::FIELD_SENDER),
             $this->resolve($data, Constants::FIELD_SUBJECT),
             $body,
-            $this->resolveAttachments($contentType->identifier, $value->getInformationCollectionStruct()->getFieldsData())
+            $this->resolveAttachments($contentType->identifier, $value->getInformationCollectionStruct()->getFieldsData()),
+            $this->resolveEmail($data, Constants::FIELD_CC),
+            $this->resolveEmail($data, Constants::FIELD_BCC)
         );
     }
 

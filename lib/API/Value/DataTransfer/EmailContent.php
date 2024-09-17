@@ -10,6 +10,10 @@ class EmailContent extends ValueObject
 {
     protected array $recipients;
 
+    protected array $cc;
+
+    protected array $bcc;
+
     protected string $subject;
 
     protected array $sender;
@@ -24,9 +28,11 @@ class EmailContent extends ValueObject
     /**
      * @param \Ibexa\Core\FieldType\BinaryFile\Value[] $attachments
      */
-    public function __construct(array $recipients, array $sender, string $subject, string $body, array $attachments = [])
+    public function __construct(array $recipients, array $sender, string $subject, string $body, array $attachments = [], array $cc = [], array $bcc = [])
     {
         $this->recipients = $recipients;
+        $this->cc = $cc;
+        $this->bcc = $bcc;
         $this->subject = $subject;
         $this->sender = $sender;
         $this->body = $body;
@@ -64,5 +70,37 @@ class EmailContent extends ValueObject
     public function getAttachments(): array
     {
         return $this->attachments;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCc() : array
+    {
+        return $this->cc;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCc() : bool
+    {
+        return !empty( $this->cc );
+    }
+
+    /**
+     * @return array
+     */
+    public function getBcc() : array
+    {
+        return $this->bcc;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBcc() : bool
+    {
+        return !empty( $this->bcc );
     }
 }
