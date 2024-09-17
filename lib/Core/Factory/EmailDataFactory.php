@@ -158,6 +158,11 @@ class EmailDataFactory implements EmailContentFactoryInterface
             return [$this->config[ConfigurationConstants::DEFAULT_VARIABLES][$field]];
         }
 
+        if ( ( $field == 'cc' || $field == 'bcc' ) )
+        {
+            return array();
+        }
+
         throw new MissingValueException($field);
     }
 
