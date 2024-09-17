@@ -66,7 +66,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.0.x-dev-cjw"
+            "dev-master": "3.0.x-cjw"
         }
     }
 }
