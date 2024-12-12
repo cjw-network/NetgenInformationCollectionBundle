@@ -65,7 +65,7 @@ final class AutoResponderAction implements ActionInterface
         {
             foreach ( $emailContent->getBcc() as $bcc )
             {
-                $email->addCc( Address::create( $bcc ) );
+                $email->addBcc( Address::create( $bcc ) );
             }
         }
 
