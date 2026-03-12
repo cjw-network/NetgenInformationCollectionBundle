@@ -20,13 +20,11 @@ use Netgen\InformationCollection\API\Value\DataTransfer\TemplateContent;
 use Netgen\InformationCollection\API\Value\Event\InformationCollected;
 use Netgen\InformationCollection\Core\Action\AutoResponderAction;
 use Twig\Environment;
-
 use function array_filter;
 use function array_key_exists;
 use function explode;
 use function filter_var;
-use function mb_trim;
-
+use function trim;
 use const FILTER_VALIDATE_EMAIL;
 
 class AutoResponderDataFactory implements EmailContentFactoryInterface
@@ -36,14 +34,14 @@ class AutoResponderDataFactory implements EmailContentFactoryInterface
     protected TranslationHelper $translationHelper;
     protected FieldHelper $fieldHelper;
     protected Environment $twig;
-    protected mixed $config;
+    protected $config;
 
     public function __construct(
         ConfigResolverInterface $configResolver,
         FieldTypeService $fieldTypeService,
         TranslationHelper $translationHelper,
         FieldHelper $fieldHelper,
-        Environment $twig,
+        Environment $twig
     ) {
         $this->configResolver = $configResolver;
         $this->fieldTypeService = $fieldTypeService;
@@ -58,6 +56,7 @@ class AutoResponderDataFactory implements EmailContentFactoryInterface
      */
     public function build(InformationCollected $value): EmailContent
     {
+        $location = $value->getLocation();
         $contentType = $value->getContentType();
 
         $template = $this->resolveTemplate($contentType->identifier);
@@ -72,6 +71,8 @@ class AutoResponderDataFactory implements EmailContentFactoryInterface
             [$this->resolve($data, Constants::FIELD_SENDER, Constants::FIELD_TYPE_EMAIL)],
             $this->resolveSubject($data),
             $body,
+            $this->resolveRecipient( $data, Constants::FIELD_CC ),
+            $this->resolveRecipient( $data, Constants::FIELD_BCC )
         );
     }
 
@@ -85,10 +86,10 @@ class AutoResponderDataFactory implements EmailContentFactoryInterface
                     'event' => $data->getEvent(),
                     'collected_fields' => $data->getEvent()->getInformationCollectionStruct()->getCollectedFields(),
                     'content' => $data->getContent(),
-                ],
+                ]
             );
 
-            $rendered = mb_trim($rendered);
+            $rendered = trim($rendered);
         }
 
         if (!empty($rendered)) {
@@ -116,20 +117,20 @@ class AutoResponderDataFactory implements EmailContentFactoryInterface
     /**
      * Returns resolved parameter.
      */
-    protected function resolveRecipient(TemplateContent $data): array
+    protected function resolveRecipient(TemplateContent $data, string $field = Constants::FIELD_RECIPIENT): array
     {
         $fields = $data->getEvent()->getInformationCollectionStruct()->getCollectedFields();
-        if ($data->getTemplateWrapper()->hasBlock(Constants::FIELD_RECIPIENT)) {
+        if ($data->getTemplateWrapper()->hasBlock($field)) {
             $rendered = $data->getTemplateWrapper()->renderBlock(
-                Constants::FIELD_RECIPIENT,
+                $field,
                 [
                     'event' => $data->getEvent(),
                     'collected_fields' => $fields,
                     'content' => $data->getContent(),
-                ],
+                ]
             );
 
-            $rendered = mb_trim($rendered);
+            $rendered = trim($rendered);
         }
 
         if (!empty($rendered)) {
@@ -167,10 +168,10 @@ class AutoResponderDataFactory implements EmailContentFactoryInterface
                     'event' => $data->getEvent(),
                     'collected_fields' => $fields,
                     'content' => $data->getContent(),
-                ],
+                ]
             );
 
-            return mb_trim($rendered);
+            return trim($rendered);
         }
 
         $content = $data->getContent();
@@ -205,13 +206,13 @@ class AutoResponderDataFactory implements EmailContentFactoryInterface
                         'content' => $data->getContent(),
                         'default_variables' => !empty($this->config[ConfigurationConstants::DEFAULT_VARIABLES])
                             ? $this->config[ConfigurationConstants::DEFAULT_VARIABLES] : null,
-                    ],
+                    ]
                 );
         }
 
         throw new MissingEmailBlockException(
             $data->getTemplateWrapper()->getSourceContext()->getName(),
-            $data->getTemplateWrapper()->getBlockNames(),
+            $data->getTemplateWrapper()->getBlockNames()
         );
     }
 

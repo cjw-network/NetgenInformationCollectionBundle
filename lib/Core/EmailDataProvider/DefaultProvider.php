@@ -26,13 +26,11 @@ class DefaultProvider implements EmailDataProviderInterface
 
     protected Environment $twig;
 
-    protected mixed $config;
-
     public function __construct(
         ConfigResolverInterface $configResolver,
         TranslationHelper $translationHelper,
         FieldHelper $fieldHelper,
-        Environment $twig,
+        Environment $twig
     ) {
         $this->configResolver = $configResolver;
         $this->config = $this->configResolver->getParameter('action_config', 'netgen_information_collection')[EmailAction::$defaultName];
@@ -61,6 +59,8 @@ class DefaultProvider implements EmailDataProviderInterface
             $this->resolve($data, Constants::FIELD_SUBJECT),
             $body,
             $this->resolveAttachments($contentType->identifier, $value->getInformationCollectionStruct()->getFieldsData()),
+            $this->resolveEmail($data, Constants::FIELD_CC),
+            $this->resolveEmail($data, Constants::FIELD_BCC)
         );
     }
 

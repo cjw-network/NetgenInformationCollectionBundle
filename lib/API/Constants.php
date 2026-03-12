@@ -12,6 +12,16 @@ final class Constants
     public const string FIELD_RECIPIENT = 'recipient';
 
     /**
+     * CC field identifier.
+     */
+    public const FIELD_CC = 'cc';
+
+    /**
+     * BCC field identifier.
+     */
+    public const FIELD_BCC = 'bcc';
+
+    /**
      * Sender field identifier.
      */
     public const string FIELD_SENDER = 'sender';
@@ -45,6 +55,16 @@ final class Constants
      * Block recipient.
      */
     public const string BLOCK_RECIPIENT = 'recipient';
+
+    /**
+     * Block cc
+     */
+    public const BLOCK_CC = 'cc';
+
+    /**
+     * Block bcc
+     */
+    public const BLOCK_BCC = 'bcc';
 
     /**
      * Block sender.
